@@ -78,14 +78,12 @@ public class AddressBookController {
         ResponseDto reponseDTO = new ResponseDto("** Employee Data deleted successfully ** ", "Id:" + Id + " is deleted");
         return new ResponseEntity(reponseDTO, HttpStatus.ACCEPTED);
     }
-
     @GetMapping("/email/{email}")
     public ResponseEntity<ResponseDto> getEmployeeDataByDepartment(@PathVariable String email) {
         List<AddressBook> employeeDataList = service.getAddressBookByID(email);
         ResponseDto respDTO = new ResponseDto("*** Data by using email ***", employeeDataList);
         return new ResponseEntity<>(respDTO, HttpStatus.OK);
     }
-
     @GetMapping("/city/{city}")
     public ResponseEntity<ResponseDto> getEmployeeDataByCity(@PathVariable String city) {
         List<AddressBook> employeeDataList = service.getAddressBookBycity(city);
