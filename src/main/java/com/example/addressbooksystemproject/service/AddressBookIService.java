@@ -11,7 +11,7 @@ public interface AddressBookIService {
      * All unimplementred methods for service class
      */
 
-    AddressBook saveData(AddressBook addressDetail);
+    // AddressBook saveData(AddressBook addressDetail);
 
     AddressBook saveDatadto(AddressDto addressDetail);
 
@@ -27,5 +27,14 @@ public interface AddressBookIService {
 
     List<AddressBook> getAddressBookBycity(String city);
 
+    List<AddressBook> getAddressBookByzipcode(Long zipcode);
+
+    String insertRecord(AddressDto addressDto);
+
+    List<AddressBook> getDataByToken(String token);
+
+    Optional<AddressBook> getAllUserByToken(String token);
 }
+
+
 

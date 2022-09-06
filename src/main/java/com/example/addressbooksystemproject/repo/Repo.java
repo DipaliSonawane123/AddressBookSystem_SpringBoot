@@ -14,6 +14,8 @@ public interface Repo extends JpaRepository<AddressBook, Long> {
 List<AddressBook> findAddressBookByemail(String email);
 @Query(value="SELECT * FROM address_book WHERE userid = userid AND city = :city", nativeQuery=true)
     List<AddressBook> findAddressBookBycity(String city);
-        }
+    @Query(value="SELECT * FROM address_book WHERE userid = userid AND zipcode = :zipcode", nativeQuery=true)
+    List<AddressBook> findAddressBookByzipcode(Long zipcode);
+}
 
 

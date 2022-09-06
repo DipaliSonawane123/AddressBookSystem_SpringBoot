@@ -4,6 +4,7 @@ import com.example.addressbooksystemproject.dto.AddressDto;
 import com.example.addressbooksystemproject.exception.AddressBookException;
 import com.example.addressbooksystemproject.model.AddressBook;
 import com.example.addressbooksystemproject.repo.Repo;
+import com.example.addressbooksystemproject.util.TokenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,14 +17,16 @@ import java.util.Optional;
 public class AddressBookService implements AddressBookIService {
     @Autowired
     Repo repository;
+    @Autowired
+    TokenUtil tokenUtil;
 /**
  *Method for Save data without Dto
  */
-    @Override
-    public AddressBook saveData(AddressBook addressDetail) {
-        repository.save(addressDetail);
-        return addressDetail;
-    }
+//    @Override
+//    public AddressBook saveData(AddressBook addressDetail) {
+//        repository.save(addressDetail);
+//        return addressDetail;
+//    }
     /**
      *Method for save data in AddressBook using ResponseDTO
      */
@@ -92,4 +95,42 @@ public class AddressBookService implements AddressBookIService {
     public List<AddressBook> getAddressBookBycity(String city) {
         return repository.findAddressBookBycity(city);
     }
-}
+
+    @Override
+    public List<AddressBook> getAddressBookByzipcode(Long zipcode) {
+        return repository.findAddressBookByzipcode(zipcode);
+    }
+
+    @Override
+    public String insertRecord(AddressDto addressDto)  throws AddressBookException {
+        AddressBook addressBook =new AddressBook(addressDto);
+        repository.save(addressBook);
+        String token = tokenUtil.createToken(addressBook.getId());
+     return token;
+    }
+
+    @Override
+    public List<AddressBook> getDataByToken(String token) {
+        long Id=tokenUtil.decodeToken(token);
+        Optional<AddressBook> isDataPresent=repository.findById(Id);
+        if (isDataPresent.isPresent()){
+            List<AddressBook> addressBookList=repository.findAll();
+            return addressBookList;
+        }else{
+            throw new AddressBookException("Token is not found...!");
+        }
+    }
+
+    @Override
+    public Optional<AddressBook> getAllUserByToken(String token) {
+        Long Userid = tokenUtil.decodeToken(token);
+        Optional<AddressBook> existingData = repository.findById(Userid);
+        if(existingData.isPresent()){
+            return existingData;
+        }else
+            throw new AddressBookException("Invalid Token");
+    }
+
+    }
+
+

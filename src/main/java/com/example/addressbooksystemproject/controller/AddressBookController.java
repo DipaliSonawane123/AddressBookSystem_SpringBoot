@@ -5,11 +5,13 @@ import com.example.addressbooksystemproject.dto.AddressDto;
 import com.example.addressbooksystemproject.dto.ResponseDto;
 import com.example.addressbooksystemproject.model.AddressBook;
 import com.example.addressbooksystemproject.service.AddressBookIService;
+import org.apache.tomcat.jni.Address;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -20,18 +22,18 @@ public class AddressBookController {
     @Autowired
     AddressBookIService service;
 
-    /**
-     * Api for Show mesaage using service layer
-     */
-    @GetMapping("/home")
-    public String serviceCall() {
-        return ("Welcome to AddressBookSystem....");
-    }
-
-    @PostMapping("/post")
-    public AddressBook addAddressDetails(@RequestBody AddressBook addressDetail) {
-        return service.saveData(addressDetail);
-    }
+//    /**
+//     * Api for Show mesaage using service layer
+//     */
+//    @GetMapping("/home")
+//    public String serviceCall() {
+//        return ("Welcome to AddressBookSystem....");
+//    }
+//
+//    @PostMapping("/post")
+//    public AddressBook addAddressDetails(@RequestBody AddressBook addressDetail) {
+//        return service.saveData(addressDetail);
+//    }
 
 /**Post Api for using reponse DTO*/
     @PostMapping("/postdto")
@@ -91,9 +93,42 @@ public class AddressBookController {
     /**
      *Method for AddressBook Details search by city*/
     @GetMapping("/city/{city}")
-    public ResponseEntity<ResponseDto> getEmployeeDataByCity(@PathVariable String city) {
+    public ResponseEntity<ResponseDto> getDataByCity(@PathVariable String city) {
         List<AddressBook> PersonDetailsList = service.getAddressBookBycity(city);
         ResponseDto respDTO = new ResponseDto("*** Data by using city ***", PersonDetailsList);
         return new ResponseEntity<>(respDTO, HttpStatus.OK);
     }
+    /**
+     *Method for AddressBook Details search by city*/
+    @GetMapping("/zipcode/{zipcode}")
+    public ResponseEntity<ResponseDto> getDatabyzipcode(@PathVariable Long zipcode) {
+        List<AddressBook> PersonDetailsList = service.getAddressBookByzipcode(zipcode);
+        ResponseDto respDTO = new ResponseDto("*** Data by using city ***", PersonDetailsList);
+        return new ResponseEntity<>(respDTO, HttpStatus.OK);
+    }
+@CrossOrigin
+    @PostMapping("/insert")
+    public ResponseEntity<String>AddAddressDetails(@Valid @RequestBody AddressDto addressDto) {
+    String token = service.insertRecord(addressDto);
+    ResponseDto respDTO = new ResponseDto("*** Data Added successfully   ***", token);
+    return new ResponseEntity(respDTO, HttpStatus.CREATED);
 }
+    @CrossOrigin
+    @GetMapping("/retrieve/{token}")
+    public ResponseEntity<String>getUserDetails(@Valid @PathVariable String token){
+        List<AddressBook> userData = service.getDataByToken(token);
+        ResponseDto respDTO = new ResponseDto("Data retrieved successfully", userData);
+        return new ResponseEntity(respDTO, HttpStatus.CREATED);
+    }
+    @CrossOrigin
+    @GetMapping("/getData/{token}")
+    public ResponseEntity<String>getAllUser(@Valid @PathVariable String token){
+        Optional<AddressBook> userData = service.getAllUserByToken(token);
+        ResponseDto respDTO = new ResponseDto("Data retrieved successfully", userData);
+        return new ResponseEntity(respDTO, HttpStatus.CREATED);
+    }
+
+
+}
+
+
