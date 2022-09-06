@@ -16,30 +16,40 @@ import java.util.Optional;
 public class AddressBookService implements AddressBookIService {
     @Autowired
     Repo repository;
-
+/**
+ *Method for Save data without Dto
+ */
     @Override
     public AddressBook saveData(AddressBook addressDetail) {
         repository.save(addressDetail);
         return addressDetail;
     }
-
+    /**
+     *Method for save data in AddressBook using ResponseDTO
+     */
     @Override
     public AddressBook saveDatadto(AddressDto addressDetail) {
         AddressBook newdata = new AddressBook(addressDetail);
         repository.save(newdata);
         return newdata;
     }
-
+    /**
+     *Method for data find by using id
+     */
     @Override
     public Optional<AddressBook> FindById(Long Id) {
         return repository.findById(Id);
     }
-
+    /**
+     *Method for find All AddressBooklist
+     */
     @Override
     public List<AddressBook> findAll() {
         return repository.findAll();
     }
-
+    /**
+     *Method for edit Details in AddressBook
+     */
     @Override
     public AddressBook editById(AddressDto dtomodel, Long Id) {
         AddressBook editdata = repository.findById(Id).orElse(null);
@@ -56,7 +66,9 @@ public class AddressBookService implements AddressBookIService {
             throw new AddressBookException("Id:"+Id+" is not present ");
 
     }
-
+    /**
+     *Method for delete Data by id
+     */
     @Override
     public void deleteById(Long Id) {
         Optional<AddressBook> findById = repository.findById(Id);
@@ -65,13 +77,17 @@ public class AddressBookService implements AddressBookIService {
         } else throw new AddressBookException("Id:"+Id+" not present");
 
     }
-
+    /**
+     *Method for get details by email
+     */
     @Override
-    public List<AddressBook> getAddressBookByID(String email) {
+    public List<AddressBook> getAddressBookByemail(String email) {
 
-        return repository.findAddressBookById(email);
+        return repository.findAddressBookByemail(email);
     }
-
+    /**
+     *Method for get details by city
+     */
     @Override
     public List<AddressBook> getAddressBookBycity(String city) {
         return repository.findAddressBookBycity(city);

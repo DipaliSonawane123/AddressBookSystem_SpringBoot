@@ -7,6 +7,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AddressBookIService {
+    /**
+     * All unimplementred methods for service class
+     */
+
     AddressBook saveData(AddressBook addressDetail);
 
     AddressBook saveDatadto(AddressDto addressDetail);
@@ -19,7 +23,7 @@ public interface AddressBookIService {
 
     void deleteById(Long Id);
 
-    List<AddressBook> getAddressBookByID(String email);
+    List<AddressBook> getAddressBookByemail(String email);
 
     List<AddressBook> getAddressBookBycity(String city);
 

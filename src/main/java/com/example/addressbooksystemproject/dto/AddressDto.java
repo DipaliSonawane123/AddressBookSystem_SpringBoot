@@ -12,7 +12,9 @@ import java.util.List;
 @NoArgsConstructor
 @Valid
 public class AddressDto {
-
+    /**
+     *All Object with validation
+     */
     @Pattern(regexp = "^[A-Z]{1}[a-zA-Z\\s]{2,}$", message=" Name is invalid ")
     String fullName;
     @Pattern(regexp = "^[1-9]{2}[0-9]{10}$", message="Invalid Contact Number(Should have Country Code and must be 10 digit number) example: 919234567890")
