@@ -4,6 +4,7 @@ import com.example.addressbooksystemproject.dto.AddressDto;
 import com.example.addressbooksystemproject.exception.AddressBookException;
 import com.example.addressbooksystemproject.model.AddressBook;
 import com.example.addressbooksystemproject.repo.Repo;
+import com.example.addressbooksystemproject.util.EmailSenderService;
 import com.example.addressbooksystemproject.util.TokenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ public class AddressBookService implements AddressBookIService {
     Repo repository;
     @Autowired
     TokenUtil tokenUtil;
+    @Autowired
+    EmailSenderService emailSender;
 /**
  *Method for Save data without Dto
  */
@@ -64,6 +67,13 @@ public class AddressBookService implements AddressBookIService {
             editdata.setCity(dtomodel.getCity());
             editdata.setState(dtomodel.getState());
             editdata.setZipcode(dtomodel.getZipcode());
+
+            //Email Body
+            String userData = "After Editing the Data: \n"+editdata.getFullName()+"\n"+editdata.getAddress()+"\n"
+                    +editdata.getCity()+"\n"+editdata.getState()+"\n"+editdata.getZipcode()+"\n"+
+                    editdata.getPhoneNumber()+"\n"+editdata.getEmail();
+            emailSender.sendEmail(editdata.getEmail(),"Edited Your Details", userData);
+
             return repository.save(editdata);
         } else
             throw new AddressBookException("Id:"+Id+" is not present ");
@@ -73,12 +83,14 @@ public class AddressBookService implements AddressBookIService {
      *Method for delete Data by id
      */
     @Override
-    public void deleteById(Long Id) {
-        Optional<AddressBook> findById = repository.findById(Id);
-        if (findById.isPresent()){
+    public  Optional<AddressBook> deleteById(Long Id) {
+        Optional<AddressBook> addressBook = repository.findById(Id);
+        if (addressBook.isPresent()){
             repository.deleteById(Id);
-        } else throw new AddressBookException("Id:"+Id+" not present");
-
+            emailSender.sendEmail(addressBook.get().getEmail(), "Deleted Data", "Your Data Deleted Successfully!");
+        } else
+            throw new AddressBookException("Id:"+Id+" not present");
+        return addressBook;
     }
     /**
      *Method for get details by email
@@ -106,7 +118,11 @@ public class AddressBookService implements AddressBookIService {
         AddressBook addressBook =new AddressBook(addressDto);
         repository.save(addressBook);
         String token = tokenUtil.createToken(addressBook.getId());
-     return token;
+        String userData = "Your Details: \n"+addressBook.getFullName()+"\n"+addressBook.getAddress()+"\n"
+                +addressBook.getCity()+"\n"+addressBook.getState()+"\n"+addressBook.getZipcode()+"\n"+
+                addressBook.getPhoneNumber()+"\n"+addressBook.getEmail();
+        emailSender.sendEmail(addressBook.getEmail(),"Added Your Details", userData);
+        return token;
     }
 
     @Override
@@ -131,6 +147,5 @@ public class AddressBookService implements AddressBookIService {
             throw new AddressBookException("Invalid Token");
     }
 
-    }
-
+}
 

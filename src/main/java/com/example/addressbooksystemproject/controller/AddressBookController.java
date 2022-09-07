@@ -35,7 +35,7 @@ public class AddressBookController {
 //        return service.saveData(addressDetail);
 //    }
 
-/**Post Api for using reponse DTO*/
+    /**Post Api for using reponse DTO*/
     @PostMapping("/postdto")
     public ResponseEntity<ResponseDto> addUserData(@Valid @RequestBody AddressDto addressBookData) {
         AddressBook response = service.saveDatadto(addressBookData);
@@ -63,9 +63,9 @@ public class AddressBookController {
         return new ResponseEntity<>(responseDTO, HttpStatus.OK);
 
     }
-/**
- * API for edit information
- */
+    /**
+     * API for edit information
+     */
     @PutMapping("/edit/{Id}")
     public ResponseEntity<ResponseDto> updateById(@PathVariable Long Id, @Valid @RequestBody AddressDto addressBookDTO) {
         Optional<AddressBook> Details = Optional.ofNullable(service.editById(addressBookDTO, Id));
@@ -78,7 +78,7 @@ public class AddressBookController {
      */
     @DeleteMapping("/delete/{Id}")
     public ResponseEntity<ResponseDto> deleteById(@PathVariable Long Id) {
-        service.deleteById(Id);
+         service.deleteById(Id);
         ResponseDto reponseDTO = new ResponseDto("** AddressBook Details of person deleted successfully ** ", "Id:" + Id + " is deleted");
         return new ResponseEntity(reponseDTO, HttpStatus.ACCEPTED);
     }
@@ -106,13 +106,13 @@ public class AddressBookController {
         ResponseDto respDTO = new ResponseDto("*** Data by using city ***", PersonDetailsList);
         return new ResponseEntity<>(respDTO, HttpStatus.OK);
     }
-@CrossOrigin
+    @CrossOrigin
     @PostMapping("/insert")
     public ResponseEntity<String>AddAddressDetails(@Valid @RequestBody AddressDto addressDto) {
-    String token = service.insertRecord(addressDto);
-    ResponseDto respDTO = new ResponseDto("*** Data Added successfully   ***", token);
-    return new ResponseEntity(respDTO, HttpStatus.CREATED);
-}
+        String token = service.insertRecord(addressDto);
+        ResponseDto respDTO = new ResponseDto("*** Data Added successfully   ***", token);
+        return new ResponseEntity(respDTO, HttpStatus.CREATED);
+    }
     @CrossOrigin
     @GetMapping("/retrieve/{token}")
     public ResponseEntity<String>getUserDetails(@Valid @PathVariable String token){
@@ -130,5 +130,4 @@ public class AddressBookController {
 
 
 }
-
 

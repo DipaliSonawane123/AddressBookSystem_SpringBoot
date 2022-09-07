@@ -19,12 +19,12 @@ public class AddressBook {
     private Long Id;
     String fullName;
     String phoneNumber;
-    @ElementCollection
-    @CollectionTable(name="AddressBook_Email",joinColumns=@JoinColumn(name="ID"))
-    @Column(name="Email")
-    private List<String> email;
+    String email;
     String address;
-    String city;
+    @ElementCollection
+    @CollectionTable(name="AddressBook_city",joinColumns=@JoinColumn(name="ID"))
+    @Column(name="city")
+    private List<String>  city;
     String state;
     Long zipcode;
 
@@ -38,5 +38,4 @@ public class AddressBook {
         this.zipcode=dto.getZipcode();
     }
 }
-
 

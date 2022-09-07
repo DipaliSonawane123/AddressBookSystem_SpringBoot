@@ -21,7 +21,7 @@ public interface AddressBookIService {
 
     AddressBook editById(AddressDto dtomodel, Long Id);
 
-    void deleteById(Long Id);
+    Optional<AddressBook> deleteById(Long Id);
 
     List<AddressBook> getAddressBookByemail(String email);
 
@@ -35,6 +35,5 @@ public interface AddressBookIService {
 
     Optional<AddressBook> getAllUserByToken(String token);
 }
-
 
 
